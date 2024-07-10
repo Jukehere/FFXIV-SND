@@ -9,7 +9,7 @@
 
   ***********
   * Version *
-  *  0.0.3  *
+  *  0.0.4  *
   ***********
 
 *********************
@@ -45,7 +45,7 @@ This Plugins are Optional and not needed unless you have it enabled in the setti
 
 ManualRepair = true --true (yes)| false (no) --will repair your gear after every fate if the threshold is reached.
 RepairAmount = 99   -- the amount of Condition you gear will need before getting Repaired
-ExtractMateria = false --true (yes)| false (no) --will Extract Materia if you can
+ExtractMateria = true --true (yes)| false (no) --will Extract Materia if you can
 
 BMR = true --true (yes)| false (no)    --will activate bossmod AI for dodging
 
@@ -73,7 +73,7 @@ function FateLocation()
     fateId = 0
     for i = 0, fates.Count-1 do
     tempfate = fates[i]
-    if tempfate == 1742 or tempfate == 1741 or tempfate == 1740 or tempfate == 1739 or tempfate == 1738 or tempfate == 1737 or tempfate == 1736 or tempfate == 1603 or tempfate == 1734 or tempfate == 1733 then --(Whitelist (still need to find away to make it better))
+    if tempfate == 1742 or tempfate == 1741 or tempfate == 1740 or tempfate == 1739 or tempfate == 1738 or tempfate == 1737 or tempfate == 1736 or tempfate == 1603 or tempfate == 1734 or tempfate == 1733 or tempfate == 1735 then --(Whitelist (still need to find away to make it better))
         distance = GetDistanceToPoint(GetFateLocationX(fates[i]), GetFateLocationY(fates[i]), GetFateLocationZ(fates[i]))
     if distance < minDistance then
         minDistance = distance
@@ -266,4 +266,21 @@ end
     yield("/pcall Repair true -1")
 end
 end
+--Materia Extraction function
+if ExtractMateria == true then
+    if CanExtractMateria(100) then
+        yield("/generalaction \"Materia Extraction\"")
+        yield("/waitaddon Materialize")
+    while CanExtractMateria(100)==true do
+        yield("/pcall Materialize true 2")
+        yield("/wait 0.5")
+    while GetCharacterCondition(39) do
+        yield("/wait 0.5")
+    end
+    end 
+        yield("/wait 1")
+        yield("/pcall Materialize true -1")
+        yield("/e Extracted all materia")
+    end 
+    end
 end
