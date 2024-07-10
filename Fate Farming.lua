@@ -9,7 +9,7 @@
 
   ***********
   * Version *
-  *  0.0.1  *
+  *  0.0.3  *
   ***********
 
 *********************
@@ -19,26 +19,22 @@
 Plugins that are needed for it to work:
 
     -> VNavmesh :   (for Pathing/Moving)  https://puni.sh/api/repository/veyn       
-    -> Pandora :    (for Fate targeting and auto sync) https://love.puni.sh/ment.json             
+    -> Pandora :    (for Fate targeting) https://love.puni.sh/ment.json             
     -> RotationSolver Reborn :  (for Attacking enemys)  https://raw.githubusercontent.com/FFXIV-CombatReborn/CombatRebornRepo/main/pluginmaster.json       
         -> Target -> activate "Select only Fate targets in Fate" and "Target Fate priority"
         -> Target -> "Engage settings" set to "Previously engaged targets (enagegd on countdown timer)"
-    -> Something Need Doing [Expanded Edition] : (Main Plugin for everything to work)   https://puni.sh/api/repository/croizat       
+    -> Something Need Doing [Expanded Edition] : (Main Plugin for everything to work)   https://puni.sh/api/repository/croizat
+    
+    BTW THIS IS JUNK SO PUT A FLAG TO WHERE YOU WANT TO COME BACK AFTER THE FATE IS OVER XOXO
 
 *********************
 *  Optional Plugins *
 *********************
 
 This Plugins are Optional and not needed unless you have it enabled in the settings:
-
-    -> Teleporter :  (for Teleporting to aethrytes)
-    -> Lifestream :  (for chaning Instances) https://raw.githubusercontent.com/NightmareXIV/MyDalamudPlugins/main/pluginmaster.json
-    -> Yes Already : (for Materia Extraction) https://love.puni.sh/ment.json
-        -> Bothers -> MaterializeDialog
+   
     -> Bossmod Reborn : (for AI dodging) https://raw.githubusercontent.com/FFXIV-CombatReborn/CombatRebornRepo/main/pluginmaster.json
         -> AI Settings -> enable "Follow during combat" and "Follow out of combat"
-    -> AutoRetainer : (for Retainers) https://love.puni.sh/ment.json
-        -> Make sure to have all Retainers enabled
 ]]
 --[[
 
@@ -47,24 +43,17 @@ This Plugins are Optional and not needed unless you have it enabled in the setti
 **************
 ]]
 
---Be aware it still buys the old Vouchers!!!
-teleport = "Wachunpelo" --Enter the name of the Teleporter where u farm Fates so it teleport back to the area and keeps farming
-Exchange = false --true (yes)| false (no) if it should exchange ur gems to Bicolor Gemstone Voucher
-ChangeInstance = false --true (yes)| false (no) if there is no Fate it will change the instance (only works in DT areas!)
-Retainers = false --true (yes)| false (no) will process Retainers if enabled (don't forget to set the teleport so it teleports back to the area)
-
 ManualRepair = true --true (yes)| false (no) --will repair your gear after every fate if the threshold is reached.
 RepairAmount = 99   -- the amount of Condition you gear will need before getting Repaired
 ExtractMateria = false --true (yes)| false (no) --will Extract Materia if you can
 
-BMR = false --true (yes)| false (no)    --will activate bossmod AI for dodging
-ChocoboS = false --true (yes)| false (no)    --Activates the Chocobo settings in Pandora "Auto-Summon Chocobo" and "Use whilst in combat".
+BMR = true --true (yes)| false (no)    --will activate bossmod AI for dodging
 
 FateWarning = false --true (yes)| false (no) --echos a warning in chat with sound from Known Dangerous Fates
 Announce = 2
 --Change this value for how much echos u want in chat 
---2 is the fate your Moving to and Bicolor gems amount
---1 is only Bicolor gems
+--2 is the fate your Moving to and Bicolor gems amount (lol)
+--1 is only Bicolor gems (lolololol)
 --0 is nothing
 --echos will appear after it found a new fate 
   
@@ -109,8 +98,6 @@ while IsInFate() == false and GetCharacterCondition(4) == false do
 end
 if fateX == 0 and fateY == 5 and fateZ == 0 then
     noFate = true
-    yield("/vnavmesh stop")
-    PathStop()
     yield("/wait 2")
 end
 --Announcement for FateId
@@ -153,6 +140,7 @@ function noFateSafe()
     if fcount == 0 then
         yield("/echo No Fate existing")
         fcount = fcount +1
+        yield("/vnav moveflag")
     end
   end
   end
@@ -199,20 +187,12 @@ if PathIsRunning() == false then
     FateLocation()
     FatePath()
 end
-    yield("/vnavmesh stop")
     yield("/wait 0.5")
 end
 --Stops Pathing when in Fate
 if PathIsRunning() and IsInFate() == true then
-    yield("/vnavmesh stop")
     yield("/wait 0.5")
 end
-end
---Path stops when there is no fate 
-if noFate == true and PathIsRunning() or PathfindInProgress() then
-    PathStop()
-    yield("/vnavmesh stop")
-    yield("/wait 2")
 end
 --Dismounting upon arriving in fate
 while IsInFate() and GetCharacterCondition(4) do
